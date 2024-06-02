@@ -37,8 +37,8 @@ public class TodoH2Service implements TodoRepository {
     @Override
 
     public Todo addTodo(Todo todo) {
-        db.update("insert into todolist (todo, status, priority) values(?, ?, ?)", todo.getTodo(), todo.getStatus(),
-                todo.getPriority());
+        db.update("insert into todolist (todo, priority, status) values(?, ?, ?)", todo.getTodo(),
+                todo.getPriority(), todo.getStatus());
 
         Todo newOne = db.queryForObject("select * from todolist where todo = ?", new TodoRowMapper(),
                 todo.getTodo());
@@ -53,14 +53,13 @@ public class TodoH2Service implements TodoRepository {
             db.update("update todolist set todo = ? where id = ?", todo.getTodo(), id);
         }
 
-        if (todo.getStatus() != null) {
-            db.update("update todolist set status = ? where id = ?", todo.getStatus(), id);
-        }
-
         if (todo.getPriority() != null) {
             db.update("update todolist set priority = ? where id = ?", todo.getPriority(), id);
         }
-
+        
+        if (todo.getStatus() != null) {
+            db.update("update todolist set status = ? where id = ?", todo.getStatus(), id);
+        }
         return getTodoById(id);
     }
 
